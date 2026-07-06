@@ -1,5 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
+import { Player } from "./Player";
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,10 +24,14 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(5, 10, 5);
 scene.add(dirLight);
 
+const player = new Player();
+scene.add(player.mesh);
+
 const clock = new THREE.Clock();
 
 function animate() {
   requestAnimationFrame(animate);
+  player.update(clock.getDelta());
   renderer.render(scene, camera);
 }
 animate();
