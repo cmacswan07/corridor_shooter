@@ -24,7 +24,7 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(5, 10, 5);
 scene.add(dirLight);
 
-const player = new Player();
+const player = new Player(camera);
 scene.add(player.mesh);
 
 const clock = new THREE.Clock();
