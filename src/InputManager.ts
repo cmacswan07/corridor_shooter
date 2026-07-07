@@ -5,28 +5,40 @@ interface InputState {
   down: boolean;
   left: boolean;
   right: boolean;
+  mouseButtons: {
+    left: boolean;
+  };
 }
 
 export class InputManager {
-  keys: InputState = {
+  inputs: InputState = {
     up: false,
     down: false,
     left: false,
     right: false,
+    mouseButtons: {
+      left: false,
+    },
   };
 
   mouseNdc = new THREE.Vector2(0, 0);
   private _crossHairEl: HTMLDivElement;
 
   constructor() {
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
-      this._set(e.code, true);
-    });
-    window.addEventListener("keyup", (e: KeyboardEvent) => {
-      this._set(e.code, false);
-    });
+    window.addEventListener("keydown", (e: KeyboardEvent) =>
+      this._set(e.code, true),
+    );
+    window.addEventListener("keyup", (e: KeyboardEvent) =>
+      this._set(e.code, false),
+    );
     window.addEventListener("mousemove", (e: MouseEvent) =>
       this._onMouseMove(e),
+    );
+    window.addEventListener("mousedown", (e: MouseEvent) =>
+      this._onMouseButton(e, true),
+    );
+    window.addEventListener("mouseup", (e: MouseEvent) =>
+      this._onMouseButton(e, false),
     );
 
     document.body.style.cursor = "none";
@@ -35,10 +47,10 @@ export class InputManager {
   }
 
   private _set(code: string, val: boolean): void {
-    if (code === "KeyW") this.keys.up = val;
-    if (code === "KeyS") this.keys.down = val;
-    if (code === "KeyA") this.keys.left = val;
-    if (code === "KeyD") this.keys.right = val;
+    if (code === "KeyW") this.inputs.up = val;
+    if (code === "KeyS") this.inputs.down = val;
+    if (code === "KeyA") this.inputs.left = val;
+    if (code === "KeyD") this.inputs.right = val;
   }
 
   private _onMouseMove(e: MouseEvent) {
@@ -46,6 +58,10 @@ export class InputManager {
     this.mouseNdc.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
     this._crossHairEl.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+  }
+
+  private _onMouseButton(e: MouseEvent, val: boolean) {
+    if (e.button === 0) this.inputs.mouseButtons.left = val;
   }
 
   private _createCrosshairEl() {

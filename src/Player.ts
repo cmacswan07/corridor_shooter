@@ -58,10 +58,10 @@ export class Player {
 
   private _updateMovement(delta: number) {
     const v = new THREE.Vector2(0, 0);
-    if (this._input.keys.left) v.x -= 1;
-    if (this._input.keys.right) v.x += 1;
-    if (this._input.keys.up) v.y += 1;
-    if (this._input.keys.down) v.y -= 1;
+    if (this._input.inputs.left) v.x -= 1;
+    if (this._input.inputs.right) v.x += 1;
+    if (this._input.inputs.up) v.y += 1;
+    if (this._input.inputs.down) v.y -= 1;
     if (v.lengthSq() > 0) v.normalize();
 
     this._mesh.position.x += v.x * SPEED * delta;
