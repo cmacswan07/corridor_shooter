@@ -1,6 +1,7 @@
 import "./style.css";
 import * as THREE from "three";
 import { Player } from "./Player";
+import { ProjectileManager } from "./ProjectileManager";
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -24,15 +25,18 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(5, 10, 5);
 scene.add(dirLight);
 
-const player = new Player(camera);
+const projectileManager = new ProjectileManager(scene);
+const player = new Player(camera, projectileManager);
 scene.add(player.mesh);
 
 const clock = new THREE.Clock();
 
 function animate() {
-  requestAnimationFrame(animate);
-  player.update(clock.getDelta());
+  const delta = clock.getDelta();
+  player.update(delta);
+  projectileManager.update(delta);
   renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 }
 animate();
 

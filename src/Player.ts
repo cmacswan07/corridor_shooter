@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { InputManager } from "./InputManager";
+import type { ProjectileManager } from "./ProjectileManager";
 
 interface Bounds {
   minX: number;
@@ -15,6 +16,8 @@ const CROSSHAIR_DEPTH = -40;
 const TIP_AXIS = new THREE.Vector3(0, 1, 0);
 const PLANE_Z = 0;
 const EDGE_MARGIN = 0.75;
+const MUZZLE_OFFSET = 0.9;
+const FIRE_COOLDOWN = 0.15;
 
 export class Player {
   private _mesh: THREE.Mesh;
@@ -36,9 +39,13 @@ export class Player {
     minY: -1,
     maxY: 1,
   };
+  private _projectileManager: ProjectileManager;
+  private _aimDirection = new THREE.Vector3(0, 0, -1);
+  private _fireCooldown = 0;
 
-  constructor(camera: THREE.Camera) {
+  constructor(camera: THREE.Camera, projectileManager: ProjectileManager) {
     this._camera = camera;
+    this._projectileManager = projectileManager;
     const geometry = new THREE.ConeGeometry(0.6, 1.6, 4);
     const material = new THREE.MeshStandardMaterial({ color: 0x44ccff });
     this._mesh = new THREE.Mesh(geometry, material);
@@ -54,6 +61,22 @@ export class Player {
     this._updateBounds();
     this._updateMovement(delta);
     this._updateAim(delta);
+    this._updateWeapon(delta);
+  }
+
+  private _updateWeapon(delta: number) {
+    this._fireCooldown -= delta;
+    if (this._input.inputs.mouseButtons.left && this._fireCooldown <= 0) {
+      this._fire();
+      this._fireCooldown = FIRE_COOLDOWN;
+    }
+  }
+
+  private _fire() {
+    const spawnPos = this._mesh.position
+      .clone()
+      .addScaledVector(this._aimDirection, MUZZLE_OFFSET);
+    this._projectileManager.spawn(spawnPos, this._aimDirection);
   }
 
   private _updateMovement(delta: number) {
@@ -91,6 +114,7 @@ export class Player {
     if (!targetPoint) return;
 
     const direction = targetPoint.sub(this._mesh.position).normalize();
+    this._aimDirection.copy(direction);
     const aimQuat = new THREE.Quaternion().setFromUnitVectors(
       TIP_AXIS,
       direction,
