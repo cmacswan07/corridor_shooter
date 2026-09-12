@@ -1,8 +1,11 @@
 import * as THREE from "three";
 
 export class Enemy {
+  static readonly HIT_RADIUS = 0.7;
+
   mesh: THREE.Mesh;
   isDead: boolean = false;
+  health: number = 5;
   private _elapsed = 0;
   private readonly _basePos: THREE.Vector3;
   private readonly _rotationSpeed: { x: number; y: number };
@@ -31,5 +34,16 @@ export class Enemy {
     this._elapsed += delta;
     this.mesh.rotation.x += this._rotationSpeed.x * delta;
     this.mesh.rotation.y += this._rotationSpeed.y * delta;
+  }
+
+  /** Applies damage; sets isDead when health drops to 0 or below. Returns true if this call killed the enemy. */
+  takeDamage(amount: number): boolean {
+    if (this.isDead) return false;
+    this.health -= amount;
+    if (this.health <= 0) {
+      this.isDead = true;
+      return true;
+    }
+    return false;
   }
 }
