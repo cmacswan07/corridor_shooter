@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { InputManager } from "./InputManager";
+import { ENEMY_Z } from "./EnemyManager";
 import type { ProjectileManager } from "./ProjectileManager";
 
 interface Bounds {
@@ -12,7 +13,6 @@ interface Bounds {
 const SPEED = 8;
 const TURN_SPEED = 8;
 const MAX_ROLL = 0.5;
-const CROSSHAIR_DEPTH = -40;
 const TIP_AXIS = new THREE.Vector3(0, 1, 0);
 const PLANE_Z = 0;
 const EDGE_MARGIN = 0.75;
@@ -26,7 +26,7 @@ export class Player {
   private _raycaster = new THREE.Raycaster();
   private _aimPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(
     new THREE.Vector3(0, 0, 1),
-    new THREE.Vector3(0, 0, CROSSHAIR_DEPTH),
+    new THREE.Vector3(0, 0, ENEMY_Z),
   );
   private _movementPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(
     new THREE.Vector3(0, 0, 1),

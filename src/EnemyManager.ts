@@ -5,7 +5,7 @@ const ROWS = 2;
 const COLS = 5;
 const ROW_SPACING = 2.5;
 const COL_SPACING = 2.5;
-const ENEMY_Z = -15;
+export const ENEMY_Z = -15;
 const FIRST_ROW_Y = 2;
 
 export class EnemyManager {
