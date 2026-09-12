@@ -23,6 +23,25 @@ export class EnemyManager {
     }
   }
 
+  /** Returns the currently active enemies (for collision checks). */
+  getEnemies(): readonly Enemy[] {
+    return this._enemies;
+  }
+
+  /** Removes dead enemies from the scene and list; spawns a new wave if none remain. */
+  removeDead(): void {
+    this._enemies = this._enemies.filter((enemy) => {
+      if (enemy.isDead) {
+        this._scene.remove(enemy.mesh);
+        return false;
+      }
+      return true;
+    });
+    if (this._enemies.length === 0) {
+      this._spawnWave();
+    }
+  }
+
   private _spawnWave() {
     const totalWidth = (COLS - 1) * COL_SPACING;
 

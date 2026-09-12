@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 const PROJECTILE_SPEED = 50;
 const PROJECTILE_LIFETIME = 1.5;
-const PROJECTILE_RADIUS = 0.12;
+export const PROJECTILE_RADIUS = 0.12;
 
 export class Projectile {
   readonly mesh: THREE.Mesh;

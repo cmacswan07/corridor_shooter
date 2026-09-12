@@ -22,4 +22,17 @@ export class ProjectileManager {
       return alive;
     });
   }
+
+  /** Returns the currently active projectiles (for collision checks). */
+  getProjectiles(): readonly Projectile[] {
+    return this._projectiles;
+  }
+
+  /** Removes a specific projectile immediately (e.g. on collision), independent of its lifetime. */
+  remove(projectile: Projectile): void {
+    const idx = this._projectiles.indexOf(projectile);
+    if (idx === -1) return;
+    this._projectiles.splice(idx, 1);
+    this._scene.remove(projectile.mesh);
+  }
 }
