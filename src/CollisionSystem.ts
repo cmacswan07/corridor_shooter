@@ -7,10 +7,13 @@ const HIT_DISTANCE_SQ = (Enemy.HIT_RADIUS + PROJECTILE_RADIUS) ** 2;
 
 /** Detects and resolves collisions between projectiles and enemies each frame. */
 export class CollisionSystem {
-  constructor(
-    private readonly _enemyManager: EnemyManager,
-    private readonly _projectileManager: ProjectileManager,
-  ) {}
+  private readonly _enemyManager: EnemyManager;
+  private readonly _projectileManager: ProjectileManager;
+
+  constructor(enemyManager: EnemyManager, projectileManager: ProjectileManager) {
+    this._enemyManager = enemyManager;
+    this._projectileManager = projectileManager;
+  }
 
   update(): void {
     const enemies = this._enemyManager.getEnemies();

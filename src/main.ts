@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { Player } from "./Player";
 import { ProjectileManager } from "./ProjectileManager";
 import { EnemyManager } from "./EnemyManager";
+import { CollisionSystem } from "./CollisionSystem";
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,6 +29,7 @@ scene.add(dirLight);
 
 const projectileManager = new ProjectileManager(scene);
 const enemyManager = new EnemyManager(scene);
+const collisionSystem = new CollisionSystem(enemyManager, projectileManager);
 const player = new Player(camera, projectileManager);
 scene.add(player.mesh);
 
@@ -38,6 +40,7 @@ function animate() {
   player.update(delta);
   enemyManager.update(delta);
   projectileManager.update(delta);
+  collisionSystem.update();
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
